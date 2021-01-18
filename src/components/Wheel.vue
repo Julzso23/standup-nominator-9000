@@ -1,5 +1,5 @@
 <template>
-  <div :class="{overlay: true, hidden: !visible}" v-if="prizes.length !== 0">
+  <div class="overlay" :class="{hidden: !visible}" v-if="prizes.length !== 0">
     <FortuneWheel
       ref="wheel"
       class="wheel"
@@ -34,7 +34,8 @@ export default {
       fontSize: 20,
       textLength: 10,
       textRadius: 230,
-      btnText: ''
+      btnText: '',
+      btnWidth: 100
     }
   }),
   computed: {
@@ -72,12 +73,15 @@ export default {
       this.$emit('nominate', prize.value)
     },
     spin () {
-      this.$nextTick(() => this.$refs.wheel.handleClick())
+      this.$nextTick(() => setTimeout(() => this.$refs.wheel.handleClick(), 100)) // Stupid hack to stop it instantly spinning to the end (I hate this)
     }
   },
   watch: {
     prizes () {
-      this.$nextTick(() => this.$refs.wheel.drawCanvas())
+      this.$nextTick(() => {
+        this.$refs.wheel.drawCanvas()
+        this.$refs.wheel.rotateEndDeg = 0
+      })
     }
   }
 }
