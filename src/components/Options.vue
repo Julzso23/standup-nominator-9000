@@ -14,7 +14,7 @@
     <div>
       <label for="duration">Wheel spin duration </label>
       <input type="range" :value="duration" @change="durationChanged" id="duration" min="1000" max="20000" step="1000" @input="onInput" />
-      <output>{{ duration }}</output>
+      <output>{{ duration }}</output> ms
     </div>
   </div>
 </template>
