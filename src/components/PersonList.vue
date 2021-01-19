@@ -22,8 +22,10 @@ export default {
   }),
   methods: {
     addPerson () {
-      this.$emit('addPerson', this.newPerson)
-      this.newPerson = ''
+      if (this.newPerson.trim()) {
+        this.$emit('addPerson', this.newPerson)
+        this.newPerson = ''
+      }
     },
     removePerson (index) {
       this.$emit('removePerson', index)
