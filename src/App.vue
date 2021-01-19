@@ -1,5 +1,7 @@
 <template>
   <main>
+    <a href="#" class="icon-button" @click="showOptions = true"><fa-icon icon="cog" /></a>
+
     <person-list :people="people" @addPerson="addPerson" @removePerson="removePerson" />
 
     <nominate-button @click="nominate">Nominate Someone</nominate-button>
@@ -7,7 +9,11 @@
 
     <nominated-overlay v-if="nominee !== ''" @click.native="endNomination" :nominee="nominee" />
 
-    <wheel :people="people" @nominate="setNominee" :visible="showWheel && nominee === ''" ref="wheel" />
+    <wheel :people="people" @nominate="setNominee" :visible="showWheel && nominee === ''" :duration="duration" ref="wheel" />
+
+    <options v-if="showOptions" @close="showOptions = false" @audioSourceUpdated="audioSourceUpdated" :volume="volume" @volumeChanged="value => volume = value" />
+
+    <audio-source :source="audioSource" ref="audio" :duration="duration" :volume="volume" />
   </main>
 </template>
 
@@ -15,11 +21,9 @@
 import PersonList from './components/PersonList'
 import NominateButton from './components/NominateButton'
 import NominatedOverlay from './components/NominatedOverlay'
-import Vue from 'vue'
-import VueConfetti from 'vue-confetti'
 import Wheel from './components/Wheel'
-
-Vue.use(VueConfetti)
+import Options from './components/Options'
+import AudioSource from './components/AudioSource.vue'
 
 export default {
   name: 'App',
@@ -27,13 +31,33 @@ export default {
     PersonList,
     NominateButton,
     NominatedOverlay,
-    Wheel
+    Wheel,
+    Options,
+    AudioSource
   },
   data: () => ({
     people: [],
     nominee: '',
-    showWheel: false
+    showWheel: false,
+    showOptions: false,
+    audioSource: null,
+    volume: 1,
+    duration: 10000
   }),
+  mounted () {
+    if (localStorage.getItem('people')) {
+      this.people = JSON.parse(localStorage.getItem('people'))
+      for (let person of this.people) {
+        person.available = true
+      }
+    }
+
+    this.$confetti.stop()
+
+    this.audioSource = localStorage.getItem('wheelAudio')
+    this.volume = localStorage.getItem('volume') && parseFloat(localStorage.getItem('volume')) || 1
+    this.duration = localStorage.getItem('wheelSpinDuration') && parseInt(localStorage.getItem('wheelSpinDuration')) || 10000
+  },
   methods: {
     nominate () {
       let availablePeople = []
@@ -88,21 +112,18 @@ export default {
         windSpeedMax: 0.5,
         particlesPerFrame: 1
       })
+
+      this.$refs.audio.pause()
     },
     spinWheel () {
       this.showWheel = true
       this.$refs.wheel.spin()
+      this.$refs.audio.play()
+    },
+    audioSourceUpdated (source) {
+      console.log('audio source updated')
+      this.audioSource = source
     }
-  },
-  mounted () {
-    if (localStorage.getItem('people')) {
-      this.people = JSON.parse(localStorage.getItem('people'))
-      for (let person of this.people) {
-        person.available = true
-      }
-    }
-
-    this.$confetti.stop()
   }
 }
 </script>
@@ -116,5 +137,11 @@ export default {
     background: #222;
     color: #eee;
     font-family: sans-serif;
+  }
+
+  .icon-button {
+    color: #eee;
+    text-decoration: none !important;
+    font-size: 1.5rem;
   }
 </style>
