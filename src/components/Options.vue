@@ -5,8 +5,17 @@
     <nominate-button @click="$refs.audioFile.click()">Change the wheel audio</nominate-button>
     <input type="file" ref="audioFile" @change="audioSourceChanged" accept="audio/*" style="display:none;" />
 
-    <label for="volume">Volume</label>
-    <input type="range" :value="volume" @change="volumeChanged" id="volume" min="0" max="1" step="0.1" />
+    <div>
+      <label for="volume">Volume </label>
+      <input type="range" :value="volume" @change="volumeChanged" id="volume" min="0" max="1" step="0.1" @input="onInput" />
+      <output>{{ volume }}</output>
+    </div>
+
+    <div>
+      <label for="duration">Wheel spin duration </label>
+      <input type="range" :value="duration" @change="durationChanged" id="duration" min="1000" max="20000" step="1000" @input="onInput" />
+      <output>{{ duration }}</output>
+    </div>
   </div>
 </template>
 
@@ -18,7 +27,8 @@ export default {
     NominateButton
   },
   props: {
-    volume: Number
+    volume: Number,
+    duration: Number
   },
   data: () => ({
     audioFileReader: new FileReader()
@@ -37,9 +47,16 @@ export default {
     close () {
       this.$emit('close')
     },
+    onInput (event) {
+      event.target.nextElementSibling.value = event.target.value
+    },
     volumeChanged (event) {
       localStorage.setItem('volume', parseFloat(event.target.value))
       this.$emit('volumeChanged', parseFloat(event.target.value))
+    },
+    durationChanged (event) {
+      localStorage.setItem('wheelSpinDuration', parseFloat(event.target.value))
+      this.$emit('durationChanged', parseFloat(event.target.value))
     }
   }
 }
