@@ -1,4 +1,4 @@
-# standup-killjoy
+# Standup Nominator 9000
 
 ## Project setup
 ```
