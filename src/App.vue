@@ -11,7 +11,7 @@
 
     <wheel :people="people" @nominate="setNominee" :visible="showWheel && nominee === ''" :duration="duration" ref="wheel" />
 
-    <options v-if="showOptions" @close="showOptions = false" @audioSourceUpdated="audioSourceUpdated" :volume="volume" @volumeChanged="value => volume = value" />
+    <options v-if="showOptions" @close="showOptions = false" @audioSourceUpdated="audioSourceUpdated" :volume="volume" @volumeChanged="value => volume = value" :duration="duration" @durationChanged="value => duration = value" />
 
     <audio-source :source="audioSource" ref="audio" :duration="duration" :volume="volume" />
   </main>
@@ -121,7 +121,6 @@ export default {
       this.$refs.audio.play()
     },
     audioSourceUpdated (source) {
-      console.log('audio source updated')
       this.audioSource = source
     }
   }
