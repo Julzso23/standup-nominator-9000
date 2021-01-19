@@ -13,7 +13,11 @@
   },
   "main": "background.js",
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.34",
+    "@fortawesome/free-solid-svg-icons": "^5.15.2",
+    "@fortawesome/vue-fontawesome": "^2.0.2",
     "core-js": "^3.6.5",
+    "electron-squirrel-startup": "^1.0.0",
     "vue": "^2.6.11",
     "vue-confetti": "^2.2.1",
     "vue-fortune-wheel": "^1.0.3"

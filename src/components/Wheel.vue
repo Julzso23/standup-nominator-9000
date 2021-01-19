@@ -7,7 +7,7 @@
       :prizes="prizes"
       :verify="false"
       :useWeight="true"
-      :duration="10000"
+      :duration="duration"
       @rotateEnd="onRotateEnd"
     />
   </div>
@@ -24,7 +24,8 @@ export default {
   },
   props: {
     people: Array,
-    visible: Boolean
+    visible: Boolean,
+    duration: Number
   },
   data: () => ({
     canvasOptions: {
