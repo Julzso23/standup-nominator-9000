@@ -5,16 +5,16 @@
     <nominate-button @click="$refs.audioFile.click()">Change the wheel audio</nominate-button>
     <input type="file" ref="audioFile" @change="audioSourceChanged" accept="audio/*" style="display:none;" />
 
-    <div>
+    <div class="slider-container">
       <label for="volume">Volume </label>
-      <input type="range" :value="volume" @change="volumeChanged" id="volume" min="0" max="1" step="0.1" @input="onInput" />
-      <output>{{ volume }}</output>
+      <input type="range" :value="volume" @change="volumeChanged" id="volume" min="0" max="1" step="0.1" @input="onInput" class="slider" />
+      <output data-multiplier="100">{{ volume * 100 }}</output>%
     </div>
 
-    <div>
+    <div class="slider-container">
       <label for="duration">Wheel spin duration </label>
-      <input type="range" :value="duration" @change="durationChanged" id="duration" min="1000" max="20000" step="1000" @input="onInput" />
-      <output>{{ duration }}</output> ms
+      <input type="range" :value="duration" @change="durationChanged" id="duration" min="5000" max="200000" step="1000" @input="onInput" class="slider" />
+      <output data-multiplier="0.001">{{ duration * 0.001 }}</output>s
     </div>
   </div>
 </template>
@@ -48,7 +48,8 @@ export default {
       this.$emit('close')
     },
     onInput (event) {
-      event.target.nextElementSibling.value = event.target.value
+      const multiplier = parseFloat(event.target.nextElementSibling.dataset.multiplier)
+      event.target.nextElementSibling.value = event.target.value * multiplier
     },
     volumeChanged (event) {
       localStorage.setItem('volume', parseFloat(event.target.value))
@@ -62,7 +63,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
   .overlay {
     position: fixed;
     left: 0;
@@ -71,5 +72,13 @@ export default {
     height: 100%;
     background: rgba(0, 0, 0, 0.75);
     padding: 1rem;
+  }
+
+  .slider-container {
+    display: flex;
+
+    .slider {
+      flex-grow: 1;
+    }
   }
 </style>
