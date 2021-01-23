@@ -9,7 +9,7 @@
 
     <nominated-overlay v-if="nominee !== ''" @click.native="endNomination" :nominee="nominee" />
 
-    <wheel :people="people" @nominate="setNominee" :visible="showWheel && nominee === ''" :duration="duration" ref="wheel" />
+    <wheel :people="people" :duration="duration" @onRotateEnd="setNominee" v-if="showWheel" />
 
     <options v-if="showOptions" @close="showOptions = false" @audioSourceUpdated="audioSourceUpdated" :volume="volume" @volumeChanged="value => volume = value" :duration="duration" @durationChanged="value => duration = value" />
 
@@ -23,7 +23,7 @@ import NominateButton from './components/NominateButton'
 import NominatedOverlay from './components/NominatedOverlay'
 import Wheel from './components/Wheel'
 import Options from './components/Options'
-import AudioSource from './components/AudioSource.vue'
+import AudioSource from './components/AudioSource'
 
 export default {
   name: 'App',
@@ -117,7 +117,6 @@ export default {
     },
     spinWheel () {
       this.showWheel = true
-      this.$refs.wheel.spin()
       this.$refs.audio.play()
     },
     audioSourceUpdated (source) {
