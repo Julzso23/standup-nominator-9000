@@ -1,5 +1,5 @@
 <template>
-  <audio ref="audio" :src="source" loop="true" />
+  <audio ref="audio" :src="source" loop="true" preload="auto" />
 </template>
 
 <script>
@@ -20,10 +20,11 @@ export default {
     pause () {
       if (!this.isValid()) return
 
-      this.$refs.audio.pause()
+      const isPlaying = this.$refs.audio.currentTime > 0 && !this.$refs.audio.paused && !this.$refs.audio.ended && this.$refs.audio.readyState > 2
+      if (isPlaying) this.$refs.audio.pause()
     },
     isValid () {
-      return (this.$refs.audio !== null || this.$refs.audio.src !== null)
+      return (this.$refs.audio !== null && this.$refs.audio.src !== null && this.$refs.audio.src !== undefined)
     },
     fade () {
       this.$refs.audio.volume = 0
