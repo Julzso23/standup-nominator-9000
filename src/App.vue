@@ -4,8 +4,10 @@
 
     <person-list :people="people" @addPerson="addPerson" @removePerson="removePerson" />
 
-    <nominate-button @click="nominate">Nominate Someone</nominate-button>
-    <nominate-button @click="spinWheel">Spin the wheel!</nominate-button>
+    <div class="row">
+      <nominate-button @click="nominate">Nominate Someone</nominate-button>
+      <nominate-button @click="spinWheel">Spin the wheel!</nominate-button>
+    </div>
 
     <nominated-overlay v-if="nominee !== ''" @click.native="endNomination" :nominee="nominee" />
 
@@ -141,5 +143,11 @@ export default {
     color: #eee;
     text-decoration: none !important;
     font-size: 1.5rem;
+  }
+
+  .row {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: space-between;
   }
 </style>

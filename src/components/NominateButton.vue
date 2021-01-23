@@ -25,4 +25,7 @@ export default {
     display: block;
     width: 100%;
   }
+  .button:not(:last-child) {
+    margin-right: 0.5rem;
+  }
 </style>
