@@ -55,6 +55,7 @@ export default {
     },
     editPerson ({ commit, dispatch }, payload) {
       commit('editPerson', payload)
+      commit('sortPeople')
       dispatch('save')
     }
   }

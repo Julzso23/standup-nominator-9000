@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form @submit.prevent="addPerson"><input type="text" placeholder="Add someone" class="text-input" :class="error ? 'error' : ''" v-model="newPerson" /></form>
+    <form @submit.prevent="addPerson"><person-name-input v-model="newPerson" @errorStateChanged="state => inputError = state" /></form>
 
     <person v-for="person in people" :key="person.id" :person="person" />
   </div>
@@ -8,6 +8,7 @@
 
 <script>
 import Person from './Person'
+import PersonNameInput from './PersonNameInput'
 
 export default {
   name: 'person-list',
@@ -15,53 +16,20 @@ export default {
     people: Array
   },
   components: {
-    Person
+    Person,
+    PersonNameInput
   },
   data: () => ({
     newPerson: '',
-    error: false
+    inputError: false
   }),
   methods: {
     addPerson () {
-      if (!this.error) {
+      if (!this.inputError) {
         this.$store.dispatch('people/addPerson', this.newPerson)
         this.newPerson = ''
       }
     }
-  },
-  watch: {
-    newPerson () {
-      if (this.newPerson === '') {
-        this.error = false
-        return
-      }
-      if (!this.newPerson.trim()) {
-        this.error = true
-        return
-      }
-      if (this.people.find(person => person.name === this.newPerson)) {
-        this.error = true
-        return
-      }
-      this.error = false
-    }
   }
 }
 </script>
-
-<style lang="scss" scoped>
-  .text-input {
-    background: #2a2a2a;
-    border: solid 1px #444;
-    padding: 0.5rem 1rem;
-    color: #eee;
-    margin-bottom: 1rem;
-    display: block;
-    width: 100%;
-    outline: none;
-  }
-
-  .error {
-    border-color: red;
-  }
-</style>
