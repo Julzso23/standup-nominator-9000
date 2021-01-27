@@ -2,26 +2,26 @@
   <main>
     <a href="#" class="icon-button" @click="showOptions = true"><fa-icon icon="cog" /></a>
 
-    <person-list :people="people" @addPerson="addPerson" @removePerson="removePerson" />
+    <person-list :people="people" />
 
     <div class="row">
-      <nominate-button @click="nominate">Nominate Someone</nominate-button>
-      <nominate-button @click="spinWheel">Spin the wheel!</nominate-button>
+      <large-button @click="nominate">Nominate Someone</large-button>
+      <large-button @click="spinWheel">Spin the wheel!</large-button>
     </div>
 
     <nominated-overlay v-if="nominee !== ''" @click.native="endNomination" :nominee="nominee" />
 
-    <wheel :people="people" :duration="duration" @onRotateEnd="setNominee" v-if="showWheel" />
+    <wheel :people="people" :duration="wheelSpinDuration" @onRotateEnd="setNominee" v-if="showWheel" />
 
-    <options v-if="showOptions" @close="showOptions = false" @audioSourceUpdated="audioSourceUpdated" :volume="volume" @volumeChanged="value => volume = value" :duration="duration" @durationChanged="value => duration = value" />
+    <options v-if="showOptions" @close="showOptions = false" />
 
-    <audio-source :source="audioSource" ref="audio" :duration="duration" :volume="volume" />
+    <audio-source :source="wheelAudio" ref="audio" :duration="wheelSpinDuration" :volume="volume" />
   </main>
 </template>
 
 <script>
 import PersonList from './components/PersonList'
-import NominateButton from './components/NominateButton'
+import LargeButton from './components/LargeButton'
 import NominatedOverlay from './components/NominatedOverlay'
 import Wheel from './components/Wheel'
 import Options from './components/Options'
@@ -31,34 +31,22 @@ export default {
   name: 'App',
   components: {
     PersonList,
-    NominateButton,
+    LargeButton,
     NominatedOverlay,
     Wheel,
     Options,
     AudioSource
   },
   data: () => ({
-    people: [],
     nominee: '',
     showWheel: false,
-    showOptions: false,
-    audioSource: null,
-    volume: 1,
-    duration: 10000
+    showOptions: false
   }),
   mounted () {
-    if (localStorage.getItem('people')) {
-      this.people = JSON.parse(localStorage.getItem('people'))
-      for (let person of this.people) {
-        person.available = true
-      }
-    }
+    this.$store.dispatch('people/load')
+    this.$store.dispatch('options/load')
 
     this.$confetti.stop()
-
-    this.audioSource = localStorage.getItem('wheelAudio')
-    this.volume = localStorage.getItem('volume') && parseFloat(localStorage.getItem('volume')) || 1
-    this.duration = localStorage.getItem('wheelSpinDuration') && parseInt(localStorage.getItem('wheelSpinDuration')) || 10000
   },
   methods: {
     nominate () {
@@ -76,22 +64,6 @@ export default {
       }
 
       this.setNominee(availablePeople[Math.floor(Math.random() * availablePeople.length)].name)
-    },
-    addPerson (name) {
-      this.people.push({
-        name,
-        available: true
-      })
-      this.people.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
-
-      this.save()
-    },
-    removePerson (index) {
-      this.people.splice(index, 1)
-      this.save()
-    },
-    save () {
-      localStorage.setItem('people', JSON.stringify(this.people))
     },
     endNomination () {
       this.nominee = ''
@@ -124,11 +96,25 @@ export default {
     audioSourceUpdated (source) {
       this.audioSource = source
     }
+  },
+  computed: {
+    people () {
+      return this.$store.state.people.people
+    },
+    wheelAudio () {
+      return this.$store.state.options.wheelAudio
+    },
+    volume () {
+      return this.$store.state.options.volume
+    },
+    wheelSpinDuration () {
+      return this.$store.state.options.wheelSpinDuration
+    }
   }
 }
 </script>
 
-<style>
+<style lang="scss">
   * {
     box-sizing: border-box;
   }
@@ -144,7 +130,9 @@ export default {
     text-decoration: none !important;
     font-size: 1.5rem;
   }
+</style>
 
+<style lang="scss" scoped>
   .row {
     display: flex;
     gap: 0.5rem;

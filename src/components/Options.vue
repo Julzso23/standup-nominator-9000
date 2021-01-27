@@ -2,7 +2,7 @@
   <div class="overlay">
     <a href="#" class="icon-button" @click="close"><fa-icon icon="times" /></a>
 
-    <nominate-button @click="$refs.audioFile.click()">Change the wheel audio</nominate-button>
+    <large-button @click="$refs.audioFile.click()">Change the wheel audio</large-button>
     <input type="file" ref="audioFile" @change="audioSourceChanged" accept="audio/*" style="display:none;" />
 
     <div class="slider-container">
@@ -13,22 +13,19 @@
 
     <div class="slider-container">
       <label for="duration">Wheel spin duration </label>
-      <input type="range" :value="duration" @change="durationChanged" id="duration" min="5000" max="200000" step="1000" @input="onInput" class="slider" />
-      <output data-multiplier="0.001">{{ duration * 0.001 }}</output>s
+      <input type="range" :value="wheelSpinDuration" @change="durationChanged" id="duration" min="5000" max="200000" step="1000" @input="onInput" class="slider" />
+      <output data-multiplier="0.001">{{ wheelSpinDuration * 0.001 }}</output>s
     </div>
   </div>
 </template>
 
 <script>
-import NominateButton from './NominateButton.vue'
+import LargeButton from './LargeButton'
+
 export default {
   name: 'options',
   components: {
-    NominateButton
-  },
-  props: {
-    volume: Number,
-    duration: Number
+    LargeButton
   },
   data: () => ({
     audioFileReader: new FileReader()
@@ -38,11 +35,12 @@ export default {
   },
   methods: {
     audioSourceChanged () {
-      this.audioFileReader.readAsDataURL(this.$refs.audioFile.files[0])
+      if (this.$refs.audioFile.files.length > 0) {
+        this.audioFileReader.readAsDataURL(this.$refs.audioFile.files[0])
+      }
     },
     audioSourceLoaded () {
-      localStorage.setItem('wheelAudio', this.audioFileReader.result)
-      this.$emit('audioSourceUpdated', this.audioFileReader.result)
+      this.$store.dispatch('options/setWheelAudio', this.audioFileReader.result)
     },
     close () {
       this.$emit('close')
@@ -52,12 +50,18 @@ export default {
       event.target.nextElementSibling.value = event.target.value * multiplier
     },
     volumeChanged (event) {
-      localStorage.setItem('volume', parseFloat(event.target.value))
-      this.$emit('volumeChanged', parseFloat(event.target.value))
+      this.$store.dispatch('options/setVolume', parseFloat(event.target.value))
     },
     durationChanged (event) {
-      localStorage.setItem('wheelSpinDuration', parseFloat(event.target.value))
-      this.$emit('durationChanged', parseFloat(event.target.value))
+      this.$store.dispatch('options/setWheelSpinDuration', parseInt(event.target.value))
+    }
+  },
+  computed: {
+    volume () {
+      return this.$store.state.options.volume
+    },
+    wheelSpinDuration () {
+      return this.$store.state.options.wheelSpinDuration
     }
   }
 }
