@@ -1,26 +1,40 @@
 <template>
-  <div class="person" :class="{ unavailable: !person.available }" @click="click">
-    <span class="name">{{ person.name }}</span>
+  <div class="person" :class="{ unavailable: !person.available }" @click.self="click">
+    <span class="name" @click="click">{{ person.name }}</span>
 
-    <button @click.stop="remove" class="delete">delete</button>
+    <div class="button-container">
+      <button @click="editing = true" class="button">edit</button>
+      <button @click="remove" class="button">delete</button>
+    </div>
+
+    <edit-person v-if="editing" @finished="finishedEditing" :person="person" />
   </div>
 </template>
 
 <script>
+import EditPerson from './EditPerson.vue'
 export default {
+  components: { EditPerson },
   name: 'person',
   props: {
     person: {
+      id: String,
       name: String,
       available: Boolean
     }
   },
+  data: () => ({
+    editing: false
+  }),
   methods: {
     click () {
       this.$set(this.$props.person, 'available', !this.$props.person.available)
     },
     remove () {
-      this.$emit('remove')
+      this.$store.dispatch('people/removePerson', this.person.id)
+    },
+    finishedEditing () {
+      this.editing = false
     }
   }
 }
@@ -43,12 +57,14 @@ export default {
       min-width: 0;
     }
 
-    .delete {
-      margin-left: auto;
-      order: 2;
+    .button {
       background: #3a3a3a;
       border: solid 1px #444;
       color: #aaa;
+      margin-left: 0.5rem;
+    }
+    .button-container {
+      margin-left: auto;
     }
   }
   .person:not(:last-child) {
