@@ -92,9 +92,6 @@ export default {
     spinWheel () {
       this.showWheel = true
       this.$refs.audio.play()
-    },
-    audioSourceUpdated (source) {
-      this.audioSource = source
     }
   },
   computed: {

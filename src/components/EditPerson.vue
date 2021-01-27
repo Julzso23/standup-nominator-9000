@@ -4,7 +4,7 @@
       <a href="#" class="icon-button" @click="close"><fa-icon icon="times" /></a>
     </div>
 
-    <input type="text" placeholder="Name" class="text-input" v-model="modifiedPerson.name" />
+    <person-name-input editing v-model="modifiedPerson.name" @errorStateChanged="state => nameError = state" />
     <label for="background-input">Background image:</label> <input type="file" ref="file" id="background-input" accept="image/*" />
     <large-button @click="submit">Save</large-button>
   </div>
@@ -12,11 +12,13 @@
 
 <script>
 import LargeButton from './LargeButton'
+import PersonNameInput from './PersonNameInput'
 
 export default {
   name: 'edit-person',
   components: {
-    LargeButton
+    LargeButton,
+    PersonNameInput
   },
   props: {
     person: {
@@ -26,22 +28,27 @@ export default {
     }
   },
   data: () => ({
-    modifiedPerson: null
+    modifiedPerson: null,
+    nameError: false
   }),
   mounted () {
-    this.modifiedPerson = this.person
+    this.modifiedPerson = Object.assign({}, this.person)
   },
   methods: {
     close () {
       this.$emit('finished')
     },
     submit () {
-      this.$emit('finished')
+      if (!this.nameError) {
+        this.$emit('finished')
 
-      this.$store.commit('editPerson', {
-        id: this.person.id,
-        modifiedPerson: this.modifiedPerson
-      })
+        if (JSON.stringify(this.modifiedPerson) !== JSON.stringify(this.person)) {
+          this.$store.dispatch('people/editPerson', {
+            id: this.person.id,
+            modifiedPerson: this.modifiedPerson
+          })
+        }
+      }
     }
   }
 }
@@ -57,15 +64,5 @@ export default {
     background: rgba(0, 0, 0, 0.75);
     cursor: default;
     padding: 1rem;
-  }
-
-  .text-input {
-    background: #2a2a2a;
-    border: solid 1px #444;
-    padding: 0.5rem 1rem;
-    color: #eee;
-    margin-bottom: 1rem;
-    display: block;
-    width: 100%;
   }
 </style>
