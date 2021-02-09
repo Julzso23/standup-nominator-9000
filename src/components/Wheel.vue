@@ -36,14 +36,9 @@ export default {
       return this.people.filter(person => person.available)
     },
     wheelStyle () {
-      if (this.winner === -1) {
-        return `
-          transition-duration: 0ms;
-          transform: rotate(0deg);`
-      }
       return `
         transition-duration: ${this.duration}ms;
-        transform: rotate(${-90 - (this.winner + 0.5) * (360 / this.availablePeople.length) + (360 * (this.duration / 1000))}deg);`
+        transform: rotate(${this.angle}deg);`
     },
     halfSize () {
       return this.size / 2
@@ -88,6 +83,10 @@ export default {
         M${this.halfSize},${this.halfSize}
         L${this.halfSize + this.halfSize * Math.cos(anglePosition)},${this.halfSize + this.halfSize * Math.sin(anglePosition)}
         A${this.halfSize},${this.halfSize} 0 ${largeArc},1 ${this.halfSize + this.halfSize * Math.cos(anglePosition + angleSize)},${this.halfSize + this.halfSize * Math.sin(anglePosition + angleSize)} z`
+    },
+    angle () {
+      if (this.winner === -1) return 0
+      return -90 - (this.winner + Math.random()) * (360 / this.availablePeople.length) + (360 * (this.duration / 1000))
     }
   },
   methods: {
