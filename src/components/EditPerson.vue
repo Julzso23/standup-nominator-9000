@@ -5,7 +5,6 @@
     </div>
 
     <person-name-input editing v-model="modifiedPerson.name" @errorStateChanged="state => nameError = state" />
-    <label for="background-input">Background image:</label> <input type="file" ref="file" id="background-input" accept="image/*" />
     <large-button @click="submit">Save</large-button>
   </div>
 </template>
@@ -22,7 +21,7 @@ export default {
   },
   props: {
     person: {
-      id: String,
+      id: Number,
       name: String,
       available: Boolean
     }
@@ -40,14 +39,14 @@ export default {
     },
     submit () {
       if (!this.nameError) {
-        this.$emit('finished')
-
         if (JSON.stringify(this.modifiedPerson) !== JSON.stringify(this.person)) {
           this.$store.dispatch('people/editPerson', {
             id: this.person.id,
             modifiedPerson: this.modifiedPerson
           })
         }
+
+        this.$emit('finished')
       }
     }
   }
