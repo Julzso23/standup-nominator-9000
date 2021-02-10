@@ -18,7 +18,7 @@ export default {
   name: 'person',
   props: {
     person: {
-      id: String,
+      id: Number,
       name: String,
       available: Boolean
     }
