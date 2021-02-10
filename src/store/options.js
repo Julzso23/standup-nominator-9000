@@ -32,7 +32,11 @@ export default {
     },
 
     save ({ state }) {
-      if (state.wheelAudio) localStorage.setItem('wheelAudio', state.wheelAudio)
+      if (state.wheelAudio) {
+        localStorage.setItem('wheelAudio', state.wheelAudio)
+      } else {
+        localStorage.removeItem('wheelAudio')
+      }
       localStorage.setItem('volume', state.volume)
       localStorage.setItem('wheelSpinDuration', state.wheelSpinDuration)
     },

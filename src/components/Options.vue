@@ -3,6 +3,7 @@
     <a href="#" class="icon-button" @click="close"><fa-icon icon="times" /></a>
 
     <large-button @click="$refs.audioFile.click()">Change the wheel audio</large-button>
+    <large-button @click="removeAudio">Remove the wheel audio</large-button>
     <input type="file" ref="audioFile" @change="audioSourceChanged" accept="audio/*" style="display:none;" />
 
     <div class="slider-container">
@@ -37,6 +38,7 @@ export default {
     audioSourceChanged () {
       if (this.$refs.audioFile.files.length > 0) {
         this.audioFileReader.readAsDataURL(this.$refs.audioFile.files[0])
+        this.$refs.audioFile.value = ''
       }
     },
     audioSourceLoaded () {
@@ -54,6 +56,9 @@ export default {
     },
     durationChanged (event) {
       this.$store.dispatch('options/setWheelSpinDuration', parseInt(event.target.value))
+    },
+    removeAudio () {
+      this.$store.dispatch('options/setWheelAudio', null)
     }
   },
   computed: {
