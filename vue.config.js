@@ -7,6 +7,9 @@ module.exports = {
         nsis: {
           createDesktopShortcut: false,
           uninstallDisplayName: '${productName}'
+        },
+        win: {
+          publish: ['github']
         }
       }
     }
