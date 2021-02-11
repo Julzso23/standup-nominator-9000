@@ -90,8 +90,13 @@ export default {
       this.$refs.audio.pause()
     },
     spinWheel () {
-      this.showWheel = true
-      this.$refs.audio.play()
+      if (this.people.length > 0) {
+        this.showWheel = true
+
+        if (this.wheelAudio !== null) {
+          this.$refs.audio.play()
+        }
+      }
     }
   },
   computed: {
