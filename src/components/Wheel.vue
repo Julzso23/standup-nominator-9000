@@ -72,7 +72,7 @@ export default {
             colour = this.colours[i % this.colours.length].hex
           }
         } else {
-          if (this.availablePeople.length % this.colours.length === 1 && parseInt(i) === this.availablePeople.length - 1) {
+          if (this.availablePeople.length % defaultColours.length === 1 && parseInt(i) === this.availablePeople.length - 1) {
             colour = defaultColours[1 % defaultColours.length]
           } else {
             colour = defaultColours[i % defaultColours.length]
