@@ -17,16 +17,20 @@
       <input type="range" :value="wheelSpinDuration" @change="durationChanged" id="duration" min="5000" max="200000" step="1000" @input="onInput" class="slider" />
       <output data-multiplier="0.001">{{ wheelSpinDuration * 0.001 }}</output>s
     </div>
+
+    <colour-list />
   </div>
 </template>
 
 <script>
 import LargeButton from './LargeButton'
+import ColourList from './ColourList'
 
 export default {
   name: 'options',
   components: {
-    LargeButton
+    LargeButton,
+    ColourList
   },
   data: () => ({
     audioFileReader: new FileReader()
