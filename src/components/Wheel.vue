@@ -43,10 +43,13 @@ export default {
     halfSize () {
       return this.size / 2
     },
+    colours () {
+      return this.$store.state.options.colours
+    },
     svgPaths () {
       const paths = []
 
-      const colours = [
+      const defaultColours = [
         '#ff5555',
         '#55ff55',
         '#5555ff',
@@ -60,13 +63,29 @@ export default {
         let angleSize = Math.PI * 2 / this.availablePeople.length
         if (this.availablePeople.length === 1) angleSize = Math.PI * 2 - 0.0001
         const anglePosition = angleSize * i
+
+        let colour = '#100'
+        if (this.colours.length > 0) {
+          if (this.availablePeople.length % this.colours.length === 1 && parseInt(i) === this.availablePeople.length - 1) {
+            colour = this.colours[1 % this.colours.length].hex
+          } else {
+            colour = this.colours[i % this.colours.length].hex
+          }
+        } else {
+          if (this.availablePeople.length % this.colours.length === 1 && parseInt(i) === this.availablePeople.length - 1) {
+            colour = defaultColours[1 % defaultColours.length]
+          } else {
+            colour = defaultColours[i % defaultColours.length]
+          }
+        }
+
         paths.push({
           name: this.availablePeople[i].name,
           d: `
             M${this.halfSize},${this.halfSize}
             L${this.halfSize + this.halfSize * Math.cos(anglePosition)},${this.halfSize + this.halfSize * Math.sin(anglePosition)}
             A${this.halfSize},${this.halfSize} 0 ${largeArc},1 ${this.halfSize + this.halfSize * Math.cos(anglePosition + angleSize)},${this.halfSize + this.halfSize * Math.sin(anglePosition + angleSize)} z`,
-          fill: colours[i % colours.length]
+          fill: colour
         })
       }
 
