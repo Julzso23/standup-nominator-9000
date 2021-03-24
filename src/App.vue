@@ -2,7 +2,7 @@
   <main>
     <a href="#" class="icon-button" @click="showOptions = true"><fa-icon icon="cog" /></a>
 
-    <person-list :people="people" />
+    <person-list :people="people" @nominate="setNominee" @rigWheel="rigWheel" />
 
     <div class="row">
       <large-button @click="nominate">Nominate Someone</large-button>
@@ -11,7 +11,7 @@
 
     <nominated-overlay v-if="nominee !== ''" @click.native="endNomination" :nominee="nominee" />
 
-    <wheel :availablePeople="availablePeople" :duration="wheelSpinDuration" @onRotateEnd="setNominee" v-if="showWheel" />
+    <wheel :availablePeople="availablePeople" :duration="wheelSpinDuration" :rigged="rigged" @onRotateEnd="setNominee" v-if="showWheel" />
 
     <options v-if="showOptions" @close="showOptions = false" />
 
@@ -40,7 +40,8 @@ export default {
   data: () => ({
     nominee: '',
     showWheel: false,
-    showOptions: false
+    showOptions: false,
+    rigged: null
   }),
   mounted () {
     this.$store.dispatch('people/load')
@@ -55,22 +56,21 @@ export default {
         return
       }
 
-      this.setNominee(this.availablePeople[Math.floor(Math.random() * this.availablePeople.length)].name)
+      this.setNominee(this.availablePeople[Math.floor(Math.random() * this.availablePeople.length)])
     },
     endNomination () {
       this.nominee = ''
       this.$confetti.stop()
     },
     setNominee (nominee) {
-      this.nominee = nominee
+      this.nominee = nominee.name
       this.showWheel = false
+      this.rigged = null
 
-      for (const person of this.people) {
-        if (person.name === nominee) {
-          this.$set(person, 'available', false)
-          break
-        }
-      }
+      this.$store.commit('people/setAvailable', {
+        id: nominee.id,
+        available: false
+      })
 
       this.$confetti.start({
         defaultDropRate: 5,
@@ -89,6 +89,10 @@ export default {
           this.$refs.audio.play()
         }
       }
+    },
+    rigWheel (person) {
+      this.rigged = this.availablePeople.findIndex(p => p.id === person.id)
+      this.spinWheel()
     }
   },
   computed: {

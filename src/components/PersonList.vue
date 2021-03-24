@@ -2,7 +2,7 @@
   <div>
     <form @submit.prevent="addPerson"><person-name-input v-model="newPerson" @errorStateChanged="state => inputError = state" /></form>
 
-    <person v-for="person in people" :key="person.id" :person="person" />
+    <person v-for="person in people" :key="person.id" :person="person" @nominate="nominate" @rigWheel="rigWheel" />
   </div>
 </template>
 
@@ -29,6 +29,12 @@ export default {
         this.$store.dispatch('people/addPerson', this.newPerson)
         this.newPerson = ''
       }
+    },
+    nominate (person) {
+      this.$emit('nominate', person)
+    },
+    rigWheel (person) {
+      this.$emit('rigWheel', person)
     }
   }
 }

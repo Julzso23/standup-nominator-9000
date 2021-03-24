@@ -19,17 +19,24 @@
 
 <script>
 export default {
-  name: 'wheel-2',
+  name: 'wheel',
   props: {
     availablePeople: Array,
-    duration: Number
+    duration: Number,
+    rigged: Number
   },
   data: () => ({
     winner: -1,
     size: 400
   }),
   mounted () {
-    setTimeout(() => this.winner = Math.floor(Math.random() * this.availablePeople.length), 100)
+    setTimeout(() => {
+      if (this.rigged === null) {
+        this.winner = Math.floor(Math.random() * this.availablePeople.length)
+      } else {
+        this.winner = this.rigged
+      }
+    }, 100)
   },
   computed: {
     wheelStyle () {
@@ -107,7 +114,7 @@ export default {
   },
   methods: {
     onRotateEnd () {
-      this.$emit('onRotateEnd', this.availablePeople[this.winner].name)
+      this.$emit('onRotateEnd', this.availablePeople[this.winner])
     }
   }
 }

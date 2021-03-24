@@ -27,6 +27,10 @@ export default {
     editPerson (state, { id, modifiedPerson }) {
       const index = state.people.findIndex(person => person.id === id)
       state.people[index] = modifiedPerson
+    },
+    setAvailable (state, { id, available }) {
+      const index = state.people.findIndex(person => person.id === id)
+      state.people[index].available = available
     }
   },
 

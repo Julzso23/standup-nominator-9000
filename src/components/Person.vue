@@ -3,6 +3,8 @@
     <span class="name" @click="click">{{ person.name }}</span>
 
     <div class="button-container">
+      <button @click="nominate" class="button" v-if="person.available">nominate</button>
+      <button @click="rigWheel" class="button" v-if="person.available">spin to</button>
       <button @click="editing = true" class="button">edit</button>
       <button @click="remove" class="button">delete</button>
     </div>
@@ -28,13 +30,22 @@ export default {
   }),
   methods: {
     click () {
-      this.$set(this.$props.person, 'available', !this.$props.person.available)
+      this.$store.commit('people/setAvailable', {
+        id: this.person.id,
+        available: !this.person.available
+      })
     },
     remove () {
       this.$store.dispatch('people/removePerson', this.person.id)
     },
     finishedEditing () {
       this.editing = false
+    },
+    nominate () {
+      this.$emit('nominate', this.person)
+    },
+    rigWheel () {
+      this.$emit('rigWheel', this.person)
     }
   }
 }
