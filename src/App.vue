@@ -11,7 +11,7 @@
 
     <nominated-overlay v-if="nominee !== ''" @click.native="endNomination" :nominee="nominee" />
 
-    <wheel :people="people" :duration="wheelSpinDuration" @onRotateEnd="setNominee" v-if="showWheel" />
+    <wheel :availablePeople="availablePeople" :duration="wheelSpinDuration" @onRotateEnd="setNominee" v-if="showWheel" />
 
     <options v-if="showOptions" @close="showOptions = false" />
 
@@ -96,15 +96,7 @@ export default {
       return this.$store.state.people.people
     },
     availablePeople () {
-      const availablePeople = []
-
-      for (let person of this.people) {
-        if (person.available) {
-          availablePeople.push(person)
-        }
-      }
-
-      return availablePeople
+      return this.people.filter(person => person.available)
     },
     wheelAudio () {
       return this.$store.state.options.wheelAudio

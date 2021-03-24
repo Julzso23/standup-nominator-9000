@@ -21,7 +21,7 @@
 export default {
   name: 'wheel-2',
   props: {
-    people: Array,
+    availablePeople: Array,
     duration: Number
   },
   data: () => ({
@@ -32,9 +32,6 @@ export default {
     setTimeout(() => this.winner = Math.floor(Math.random() * this.availablePeople.length), 100)
   },
   computed: {
-    availablePeople () {
-      return this.people.filter(person => person.available)
-    },
     wheelStyle () {
       return `
         transition-duration: ${this.duration}ms;
