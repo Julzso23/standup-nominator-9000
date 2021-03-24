@@ -50,20 +50,12 @@ export default {
   },
   methods: {
     nominate () {
-      let availablePeople = []
-
-      for (let person of this.people) {
-        if (person.available) {
-          availablePeople.push(person)
-        }
-      }
-
-      if (availablePeople.length === 0) {
+      if (this.availablePeople.length === 0) {
         this.nominee = ''
         return
       }
 
-      this.setNominee(availablePeople[Math.floor(Math.random() * availablePeople.length)].name)
+      this.setNominee(this.availablePeople[Math.floor(Math.random() * this.availablePeople.length)].name)
     },
     endNomination () {
       this.nominee = ''
@@ -90,7 +82,7 @@ export default {
       this.$refs.audio.pause()
     },
     spinWheel () {
-      if (this.people.length > 0) {
+      if (this.availablePeople.length > 0) {
         this.showWheel = true
 
         if (this.wheelAudio !== null) {
@@ -102,6 +94,17 @@ export default {
   computed: {
     people () {
       return this.$store.state.people.people
+    },
+    availablePeople () {
+      const availablePeople = []
+
+      for (let person of this.people) {
+        if (person.available) {
+          availablePeople.push(person)
+        }
+      }
+
+      return availablePeople
     },
     wheelAudio () {
       return this.$store.state.options.wheelAudio
