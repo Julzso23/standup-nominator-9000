@@ -48,6 +48,8 @@ export default {
     this.$store.dispatch('options/load')
 
     this.$confetti.stop()
+
+    document.addEventListener('keydown', this.onKeyDown)
   },
   methods: {
     nominate () {
@@ -93,6 +95,25 @@ export default {
     rigWheel (person) {
       this.rigged = this.availablePeople.findIndex(p => p.id === person.id)
       this.spinWheel()
+    },
+    onKeyDown (event) {
+      if (document.activeElement.nodeName === 'INPUT') return
+
+      switch (event.code) {
+        case 'Space':
+        case 'KeyS':
+        {
+          this.spinWheel()
+          event.preventDefault()
+          break
+        }
+        case 'KeyN':
+        {
+          this.nominate()
+          event.preventDefault()
+          break
+        }
+      }
     }
   },
   computed: {
