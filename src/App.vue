@@ -103,12 +103,14 @@ export default {
         case 'Space':
         case 'KeyS':
         {
+          this.endNomination()
           this.spinWheel()
           event.preventDefault()
           break
         }
         case 'KeyN':
         {
+          this.endNomination()
           this.nominate()
           event.preventDefault()
           break
