@@ -4,9 +4,12 @@ import { app, protocol, BrowserWindow } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import { autoUpdater } from 'electron-updater'
+import path from 'path'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 if(require('electron-squirrel-startup')) app.quit()
+
+if (!app.requestSingleInstanceLock()) app.quit()
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -21,7 +24,8 @@ async function createWindow() {
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
-      nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION
+      nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
+      preload: path.join(__dirname, 'preload.js')
     },
     title: 'Standup Nominator 9000',
     autoHideMenuBar: true
@@ -37,6 +41,24 @@ async function createWindow() {
     win.loadURL('app://./index.html')
     autoUpdater.checkForUpdatesAndNotify()
   }
+
+  if (isDevelopment) {
+    app.setAsDefaultProtocolClient('standup-nominator-9000', process.execPath, [path.resolve(process.argv[1])])
+  } else {
+    app.setAsDefaultProtocolClient('standup-nominator-9000')
+  }
+
+  app.on('second-instance', (e, argv) => {
+    if (process.platform !== 'darwin') {
+      let url = argv.find((arg) => arg.startsWith('standup-nominator-9000://'))
+      win.webContents.send('url-data', url.slice('standup-nominator-9000://'.length).replace(/\/$/, ''))
+    }
+
+    if (win) {
+      if (win.isMinimized()) win.restore()
+      win.focus()
+    }
+  })
 }
 
 // Quit when all windows are closed.

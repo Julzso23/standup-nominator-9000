@@ -17,3 +17,7 @@ new Vue({
   render: h => h(App),
   store
 }).$mount('#app')
+
+window.ipcRenderer.on('url-data', (event, data) => {
+  console.log(data)
+})
