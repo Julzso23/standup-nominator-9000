@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="person-list">
     <form @submit.prevent="addPerson"><person-name-input v-model="newPerson" @errorStateChanged="state => inputError = state" /></form>
 
     <person v-for="person in people" :key="person.id" :person="person" @nominate="nominate" @rigWheel="rigWheel" />
@@ -39,3 +39,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+  .person-list {
+    margin-bottom: 1rem;
+  }
+</style>

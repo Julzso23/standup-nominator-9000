@@ -4,10 +4,10 @@
 
     <person-list :people="people" @nominate="setNominee" @rigWheel="rigWheel" />
 
-    <div class="row">
+    <row>
       <large-button @click="nominate">Nominate Someone</large-button>
       <large-button @click="spinWheel">Spin the wheel!</large-button>
-    </div>
+    </row>
 
     <nominated-overlay v-if="nominee !== ''" @click.native="endNomination" :nominee="nominee" />
 
@@ -26,6 +26,7 @@ import NominatedOverlay from './components/NominatedOverlay'
 import Wheel from './components/Wheel'
 import Options from './components/Options'
 import AudioSource from './components/AudioSource'
+import Row from './components/Row'
 
 export default {
   name: 'App',
@@ -35,7 +36,8 @@ export default {
     NominatedOverlay,
     Wheel,
     Options,
-    AudioSource
+    AudioSource,
+    Row
   },
   data: () => ({
     nominee: '',
@@ -153,13 +155,5 @@ export default {
     color: #eee;
     text-decoration: none !important;
     font-size: 1.5rem;
-  }
-</style>
-
-<style lang="scss" scoped>
-  .row {
-    display: flex;
-    gap: 0.5rem;
-    justify-content: space-between;
   }
 </style>

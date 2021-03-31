@@ -2,9 +2,17 @@
   <div class="overlay">
     <a href="#" class="icon-button" @click="close"><fa-icon icon="times" /></a>
 
-    <large-button @click="$refs.audioFile.click()">Change the wheel audio</large-button>
-    <large-button @click="removeAudio">Remove the wheel audio</large-button>
+    <row>
+      <large-button @click="$refs.audioFile.click()">Set wheel audio</large-button>
+      <large-button @click="removeAudio">Remove wheel audio</large-button>
+    </row>
     <input type="file" ref="audioFile" @change="audioSourceChanged" accept="audio/*" style="display:none;" />
+
+    <row>
+      <large-button @click="$refs.imageFile.click()">Set wheel image</large-button>
+      <large-button @click="removeImage">Remove wheel image</large-button>
+    </row>
+    <input type="file" ref="imageFile" @change="imageSourceChanged" accept="image/png,image/jpeg" style="display:none;" />
 
     <div class="slider-container">
       <label for="volume">Volume </label>
@@ -25,18 +33,22 @@
 <script>
 import LargeButton from './LargeButton'
 import ColourList from './ColourList'
+import Row from './Row'
 
 export default {
   name: 'options',
   components: {
     LargeButton,
-    ColourList
+    ColourList,
+    Row
   },
   data: () => ({
-    audioFileReader: new FileReader()
+    audioFileReader: new FileReader(),
+    imageFileReader: new FileReader()
   }),
   mounted () {
     this.audioFileReader.onload = this.audioSourceLoaded
+    this.imageFileReader.onload = this.imageSourceLoaded
   },
   methods: {
     audioSourceChanged () {
@@ -45,8 +57,17 @@ export default {
         this.$refs.audioFile.value = ''
       }
     },
+    imageSourceChanged () {
+      if (this.$refs.imageFile.files.length > 0) {
+        this.imageFileReader.readAsDataURL(this.$refs.imageFile.files[0])
+        this.$refs.imageFile.value = ''
+      }
+    },
     audioSourceLoaded () {
       this.$store.dispatch('options/setWheelAudio', this.audioFileReader.result)
+    },
+    imageSourceLoaded () {
+      this.$store.dispatch('options/setWheelImage', this.imageFileReader.result)
     },
     close () {
       this.$emit('close')
@@ -63,6 +84,9 @@ export default {
     },
     removeAudio () {
       this.$store.dispatch('options/setWheelAudio', null)
+    },
+    removeImage () {
+      this.$store.dispatch('options/setWheelImage', null)
     }
   },
   computed: {
@@ -93,5 +117,9 @@ export default {
     .slider {
       flex-grow: 1;
     }
+  }
+
+  .row {
+    margin-bottom: 0.5rem;
   }
 </style>
