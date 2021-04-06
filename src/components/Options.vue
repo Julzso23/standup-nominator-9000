@@ -20,11 +20,14 @@
       <output data-multiplier="100">{{ volume * 100 }}</output>%
     </div>
 
-    <div class="slider-container">
+    <div class="slider-container row">
       <label for="duration">Wheel spin duration </label>
       <input type="range" :value="wheelSpinDuration" @change="durationChanged" id="duration" min="5000" max="200000" step="1000" @input="onInput" class="slider" />
       <output data-multiplier="0.001">{{ wheelSpinDuration * 0.001 }}</output>s
     </div>
+
+    <spotify-authorise-button v-if="!spotifyConnected" />
+    <spotify-unlink-button v-else />
 
     <colour-list />
   </div>
@@ -34,13 +37,17 @@
 import LargeButton from './LargeButton'
 import ColourList from './ColourList'
 import Row from './Row'
+import SpotifyAuthoriseButton from './SpotifyAuthoriseButton'
+import SpotifyUnlinkButton from './SpotifyUnlinkButton'
 
 export default {
   name: 'options',
   components: {
     LargeButton,
     ColourList,
-    Row
+    Row,
+    SpotifyAuthoriseButton,
+    SpotifyUnlinkButton
   },
   data: () => ({
     audioFileReader: new FileReader(),
@@ -95,6 +102,9 @@ export default {
     },
     wheelSpinDuration () {
       return this.$store.state.options.wheelSpinDuration
+    },
+    spotifyConnected () {
+      return this.$store.state.spotify.accessToken !== null
     }
   }
 }

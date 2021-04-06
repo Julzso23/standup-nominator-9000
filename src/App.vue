@@ -48,6 +48,7 @@ export default {
   mounted () {
     this.$store.dispatch('people/load')
     this.$store.dispatch('options/load')
+    this.$store.dispatch('spotify/generateCodeChallenge')
 
     this.$confetti.stop()
 
@@ -83,14 +84,20 @@ export default {
         particlesPerFrame: 1
       })
 
-      this.$refs.audio.pause()
+      if (this.wheelAudio !== null) {
+        this.$refs.audio.pause()
+      } else if (this.spotifyConnected) {
+        this.$store.dispatch('spotify/pause')
+      }
     },
     spinWheel () {
-      if (this.availablePeople.length > 0) {
+      if (this.availablePeople.length > 0 && this.showWheel === false) {
         this.showWheel = true
 
         if (this.wheelAudio !== null) {
           this.$refs.audio.play()
+        } else if (this.spotifyConnected) {
+          this.$store.dispatch('spotify/play')
         }
       }
     },
@@ -135,6 +142,9 @@ export default {
     },
     wheelSpinDuration () {
       return this.$store.state.options.wheelSpinDuration
+    },
+    spotifyConnected () {
+      return this.$store.state.spotify.accessToken !== null
     }
   }
 }

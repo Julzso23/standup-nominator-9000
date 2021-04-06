@@ -36,11 +36,19 @@ export default {
     },
     setAccessToken (state, accessToken) {
       state.accessToken = accessToken
-      localStorage.setItem('spotifyAccessToken', accessToken)
+      if (accessToken === null) {
+        localStorage.removeItem('spotifyAccessToken')
+      } else {
+        localStorage.setItem('spotifyAccessToken', accessToken)
+      }
     },
     setRefreshToken (state, refreshToken) {
       state.refreshToken = refreshToken
-      localStorage.setItem('spotifyRefreshToken', refreshToken)
+      if (refreshToken === null) {
+        localStorage.removeItem('spotifyRefreshToken')
+      } else {
+        localStorage.setItem('spotifyRefreshToken', refreshToken)
+      }
     },
     setAxiosInstance (state) {
       if (state.axiosInstance !== null) return
@@ -71,6 +79,11 @@ export default {
         commit('setAccessToken', response.data.access_token)
         commit('setRefreshToken', response.data.refresh_token)
       })
+    },
+
+    async unlink ({ commit }) {
+      commit('setAccessToken', null)
+      commit('setRefreshToken', null)
     },
 
     async play ({ state, commit }) {
