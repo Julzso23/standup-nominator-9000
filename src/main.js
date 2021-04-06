@@ -19,5 +19,12 @@ new Vue({
 }).$mount('#app')
 
 window.ipcRenderer.on('url-data', (event, data) => {
-  console.log(data)
+  const url = new URL(data)
+  switch (url.pathname.replace(/^\/+|\/$/g, '')) {
+    case 'spotifyAuth': {
+      const params = new URLSearchParams(url.search)
+      store.dispatch('spotify/getToken', params.get('code'))
+      break
+    }
+  }
 })

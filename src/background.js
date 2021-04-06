@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, protocol, BrowserWindow } from 'electron'
+import { app, protocol, BrowserWindow, shell } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import { autoUpdater } from 'electron-updater'
@@ -51,13 +51,18 @@ async function createWindow() {
   app.on('second-instance', (e, argv) => {
     if (process.platform !== 'darwin') {
       let url = argv.find((arg) => arg.startsWith('standup-nominator-9000://'))
-      win.webContents.send('url-data', url.slice('standup-nominator-9000://'.length).replace(/\/$/, ''))
+      win.webContents.send('url-data', url)
     }
 
     if (win) {
       if (win.isMinimized()) win.restore()
       win.focus()
     }
+  })
+
+  win.webContents.on('new-window', function(e, url) {
+    e.preventDefault()
+    shell.openExternal(url)
   })
 }
 
