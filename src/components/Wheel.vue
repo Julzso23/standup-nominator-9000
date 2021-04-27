@@ -10,7 +10,7 @@
         <circle :cx="halfSize" :cy="halfSize" :r="size"></circle>
         <path v-for="(path, index) in svgPaths" :key="'segment' + index" :d="path.d" :fill="path.fill"></path>
         <text v-for="(path, index) in svgPaths" :key="'label' + index" :x="5" :y="halfSize" dominant-baseline="central" :clip-path="`url(#clippath)`" :transform="`rotate(${(index + 0.5) * (360 / availablePeople.length) - 180}, ${halfSize}, ${halfSize})`">{{ path.name }}</text>
-        <image v-if="wheelImage" preserveAspectRatio="xMinYMid meet" :width="size / 10" :height="size / 10" :x="size / 2 - size / 20" :y="size / 2 - size / 20" transform-origin="center" :href="wheelImage" />
+        <image v-if="wheelImage" preserveAspectRatio="xMinYMid meet" :width="wheelImageSize" :height="wheelImageSize" :x="size / 2 - wheelImageSize / 2" :y="size / 2 - wheelImageSize / 2" transform-origin="center" :href="wheelImage" />
       </svg>
 
       <div class="arrow"></div>
@@ -114,6 +114,9 @@ export default {
     },
     wheelImage () {
       return this.$store.state.options.wheelImage
+    },
+    wheelImageSize () {
+      return this.$store.state.options.wheelImageSize * this.size / 10
     }
   },
   methods: {

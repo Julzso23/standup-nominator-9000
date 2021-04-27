@@ -7,6 +7,7 @@ export default {
   state: {
     wheelAudio: null,
     wheelImage: null,
+    wheelImageSize: 1,
     volume: 1,
     wheelSpinDuration: 10000,
     colours: []
@@ -18,6 +19,9 @@ export default {
     },
     setWheelImage (state, wheelImage) {
       state.wheelImage = wheelImage
+    },
+    setWheelImageSize (state, size) {
+      state.wheelImageSize = size
     },
     setVolume (state, volume) {
       state.volume = volume
@@ -51,6 +55,9 @@ export default {
       const wheelImage = localStorage.getItem('wheelImage')
       if (wheelImage) commit('setWheelImage', wheelImage)
 
+      const wheelImageSize = localStorage.getItem('wheelImageSize')
+      if (wheelImageSize) commit('setWheelImageSize', parseFloat(wheelImageSize))
+
       const volume = localStorage.getItem('volume')
       if (volume) commit('setVolume', parseFloat(volume))
 
@@ -72,6 +79,7 @@ export default {
       } else {
         localStorage.removeItem('wheelImage')
       }
+      localStorage.setItem('wheelImageSize', state.wheelImageSize)
       localStorage.setItem('volume', state.volume)
       localStorage.setItem('wheelSpinDuration', state.wheelSpinDuration)
       localStorage.setItem('colours', JSON.stringify(state.colours))
@@ -84,6 +92,11 @@ export default {
 
     setWheelImage ({ commit, dispatch }, wheelImage) {
       commit('setWheelImage', wheelImage)
+      dispatch('save')
+    },
+
+    setWheelImageSize ({ commit, dispatch }, size) {
+      commit('setWheelImageSize', size)
       dispatch('save')
     },
 

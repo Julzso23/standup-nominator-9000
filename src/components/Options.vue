@@ -26,6 +26,12 @@
       <output data-multiplier="0.001">{{ wheelSpinDuration * 0.001 }}</output>s
     </div>
 
+    <div class="slider-container row">
+      <label for="imageSize">Wheel image size </label>
+      <input type="range" :value="wheelImageSize" @change="imageSizeChanged" id="imageSize" min="0.5" max="4" step="0.1" @input="onInput" class="slider" />
+      <output data-multiplier="100">{{ wheelImageSize * 100 }}</output>%
+    </div>
+
     <spotify-authorise-button v-if="!spotifyConnected" />
     <spotify-unlink-button v-else />
 
@@ -81,13 +87,16 @@ export default {
     },
     onInput (event) {
       const multiplier = parseFloat(event.target.nextElementSibling.dataset.multiplier)
-      event.target.nextElementSibling.value = event.target.value * multiplier
+      event.target.nextElementSibling.value = Math.floor(event.target.value * multiplier)
     },
     volumeChanged (event) {
       this.$store.dispatch('options/setVolume', parseFloat(event.target.value))
     },
     durationChanged (event) {
       this.$store.dispatch('options/setWheelSpinDuration', parseInt(event.target.value))
+    },
+    imageSizeChanged (event) {
+      this.$store.dispatch('options/setWheelImageSize', parseFloat(event.target.value))
     },
     removeAudio () {
       this.$store.dispatch('options/setWheelAudio', null)
@@ -105,6 +114,9 @@ export default {
     },
     spotifyConnected () {
       return this.$store.state.spotify.accessToken !== null
+    },
+    wheelImageSize () {
+      return this.$store.state.options.wheelImageSize
     }
   }
 }
