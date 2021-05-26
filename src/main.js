@@ -4,7 +4,8 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faCog, faTimes } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import store from './store'
-import App from './App.vue'
+import router from './router'
+import Main from './Main.vue'
 
 Vue.use(VueConfetti)
 
@@ -14,9 +15,11 @@ Vue.component('fa-icon', FontAwesomeIcon)
 Vue.config.productionTip = false
 
 new Vue({
-  render: h => h(App),
-  store
-}).$mount('#app')
+  router,
+  store,
+  el: '#app',
+  render: h => h(Main)
+})
 
 window.urlData.receive((event, data) => {
   const url = new URL(data)

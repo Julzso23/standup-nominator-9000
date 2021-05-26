@@ -27,6 +27,7 @@
     "vue": "^2.6.12",
     "vue-color": "^2.8.1",
     "vue-confetti": "^2.2.1",
+    "vue-router": "^3.5.1",
     "vuex": "^3.6.2"
   },
   "devDependencies": {

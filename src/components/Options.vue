@@ -1,6 +1,6 @@
 <template>
-  <div class="overlay">
-    <a href="#" class="icon-button" @click="close"><fa-icon icon="times" /></a>
+  <div class="options">
+    <icon-button to="/" icon="times" />
 
     <row>
       <large-button @click="$refs.audioFile.click()">Set wheel audio</large-button>
@@ -45,6 +45,7 @@ import ColourList from './ColourList'
 import Row from './Row'
 import SpotifyAuthoriseButton from './SpotifyAuthoriseButton'
 import SpotifyUnlinkButton from './SpotifyUnlinkButton'
+import IconButton from './IconButton'
 
 export default {
   name: 'options',
@@ -53,7 +54,8 @@ export default {
     ColourList,
     Row,
     SpotifyAuthoriseButton,
-    SpotifyUnlinkButton
+    SpotifyUnlinkButton,
+    IconButton
   },
   data: () => ({
     audioFileReader: new FileReader(),
@@ -81,9 +83,6 @@ export default {
     },
     imageSourceLoaded () {
       this.$store.dispatch('options/setWheelImage', this.imageFileReader.result)
-    },
-    close () {
-      this.$emit('close')
     },
     onInput (event) {
       const multiplier = parseFloat(event.target.nextElementSibling.dataset.multiplier)
@@ -123,16 +122,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .overlay {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.75);
-    padding: 1rem;
-  }
-
   .slider-container {
     display: flex;
 

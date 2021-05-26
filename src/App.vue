@@ -1,6 +1,6 @@
 <template>
   <main>
-    <a href="#" class="icon-button" @click="showOptions = true"><fa-icon icon="cog" /></a>
+    <icon-button to='/options' icon="cog" />
 
     <person-list :people="people" @nominate="setNominee" @rigWheel="rigWheel" />
 
@@ -13,8 +13,6 @@
 
     <wheel :availablePeople="availablePeople" :duration="wheelSpinDuration" :rigged="rigged" @onRotateEnd="setNominee" v-if="showWheel" />
 
-    <options v-if="showOptions" @close="showOptions = false" />
-
     <audio-source :source="wheelAudio" ref="audio" :duration="wheelSpinDuration" :volume="volume" />
   </main>
 </template>
@@ -24,9 +22,9 @@ import PersonList from './components/PersonList'
 import LargeButton from './components/LargeButton'
 import NominatedOverlay from './components/NominatedOverlay'
 import Wheel from './components/Wheel'
-import Options from './components/Options'
 import AudioSource from './components/AudioSource'
 import Row from './components/Row'
+import IconButton from './components/IconButton'
 
 export default {
   name: 'App',
@@ -35,14 +33,13 @@ export default {
     LargeButton,
     NominatedOverlay,
     Wheel,
-    Options,
     AudioSource,
-    Row
+    Row,
+    IconButton
   },
   data: () => ({
     nominee: '',
     showWheel: false,
-    showOptions: false,
     rigged: null
   }),
   mounted () {
@@ -149,21 +146,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-  * {
-    box-sizing: border-box;
-  }
-
-  body {
-    background: #222;
-    color: #eee;
-    font-family: sans-serif;
-  }
-
-  .icon-button {
-    color: #eee;
-    text-decoration: none !important;
-    font-size: 1.5rem;
-  }
-</style>
