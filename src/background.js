@@ -25,7 +25,7 @@ async function createWindow() {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
-      preload: path.join(__dirname, 'preload.js')
+      preload: path.resolve(__dirname, 'preload.js')
     },
     title: 'Standup Nominator 9000',
     autoHideMenuBar: true
@@ -51,7 +51,9 @@ async function createWindow() {
   app.on('second-instance', (e, argv) => {
     if (process.platform !== 'darwin') {
       let url = argv.find((arg) => arg.startsWith('standup-nominator-9000://'))
-      win.webContents.send('url-data', url)
+      if (url !== undefined) {
+        win.webContents.send('url-data', url)
+      }
     }
 
     if (win) {
@@ -60,9 +62,9 @@ async function createWindow() {
     }
   })
 
-  win.webContents.on('new-window', function(e, url) {
-    e.preventDefault()
+  win.webContents.setWindowOpenHandler(({ url }) => {
     shell.openExternal(url)
+    return { action: 'deny' }
   })
 }
 

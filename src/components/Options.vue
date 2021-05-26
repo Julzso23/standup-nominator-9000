@@ -20,7 +20,7 @@
       <output data-multiplier="100">{{ volume * 100 }}</output>%
     </div>
 
-    <div class="slider-container row">
+    <div class="slider-container">
       <label for="duration">Wheel spin duration </label>
       <input type="range" :value="wheelSpinDuration" @change="durationChanged" id="duration" min="5000" max="200000" step="1000" @input="onInput" class="slider" />
       <output data-multiplier="0.001">{{ wheelSpinDuration * 0.001 }}</output>s

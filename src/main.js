@@ -18,7 +18,7 @@ new Vue({
   store
 }).$mount('#app')
 
-window.ipcRenderer.on('url-data', (event, data) => {
+window.urlData.receive((event, data) => {
   const url = new URL(data)
   switch (url.pathname.replace(/^\/+|\/$/g, '')) {
     case 'spotifyAuth': {
