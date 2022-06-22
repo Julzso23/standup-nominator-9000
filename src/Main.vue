@@ -1,7 +1,5 @@
 <template>
-  <main>
-    <router-view />
-  </main>
+  <router-view />
 </template>
 
 <style lang="scss">
@@ -13,5 +11,14 @@
     background: #222;
     color: #eee;
     font-family: sans-serif;
+  }
+
+  html, body, main {
+    height: 100%;
+    margin: 0;
+  }
+
+  main {
+    padding: 0.5rem;
   }
 </style>

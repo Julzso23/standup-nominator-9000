@@ -1,11 +1,10 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import { app } from '../main'
+import { createStore } from 'vuex'
 import people from './people'
 import options from './options'
 import spotify from './spotify'
-Vue.use(Vuex)
 
-export default new Vuex.Store ({
+export default createStore ({
   modules: {
     people,
     options,

@@ -1,8 +1,10 @@
 <template>
   <div class="person-list">
-    <form @submit.prevent="addPerson"><person-name-input v-model="newPerson" @errorStateChanged="state => inputError = state" /></form>
+    <form @submit.prevent="addPerson"><person-name-input v-model:name="newPerson" @errorStateChanged="state => inputError = state" /></form>
 
-    <person v-for="person in people" :key="person.id" :person="person" @nominate="nominate" @rigWheel="rigWheel" />
+    <div class="list">
+      <person v-for="person in people" :key="person.id" :person="person" @nominate="nominate" @rigWheel="rigWheel" />
+    </div>
   </div>
 </template>
 
@@ -25,7 +27,7 @@ export default {
   }),
   methods: {
     addPerson () {
-      if (!this.inputError) {
+      if (!this.inputError && this.newPerson !== '') {
         this.$store.dispatch('people/addPerson', this.newPerson)
         this.newPerson = ''
       }
@@ -41,7 +43,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
   .person-list {
-    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  .list {
+    overflow-y: auto;
   }
 </style>

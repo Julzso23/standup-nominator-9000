@@ -1,5 +1,5 @@
 <template>
-  <input type="text" :placeholder="editing ? 'Name' : 'Add someone'" class="text-input" :class="error ? 'error' : ''" :value="value" @input="nameChanged" />
+  <input type="text" :placeholder="editing ? 'Name' : 'Add someone'" class="text-input" :class="error ? 'error' : ''" v-model="name" @input="nameChanged" />
 </template>
 
 <script>
@@ -7,24 +7,21 @@ export default {
   name: 'person-name-input',
   props: {
     editing: Boolean,
-    value: String
+    name: String
   },
   data: () => ({
-    name: '',
     error: false
   }),
   methods: {
     nameChanged (event) {
-      this.$emit('input', event.target.value)
+      this.$emit('update:name', event.target.value)
     }
   },
   watch: {
     error () {
       this.$emit('errorStateChanged', this.error)
     },
-    value () {
-      this.name = this.value
-
+    name () {
       if (this.name === '') {
         this.error = false
         return

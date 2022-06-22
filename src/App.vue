@@ -1,20 +1,22 @@
 <template>
-  <main>
-    <icon-button to='/options' icon="cog" />
+  <div class="app">
+    <div class="column">
+      <icon-button to='/options' icon="cog" />
 
-    <person-list :people="people" @nominate="setNominee" @rigWheel="rigWheel" />
+      <person-list :people="people" @nominate="setNominee" @rigWheel="rigWheel" />
 
-    <row>
-      <large-button @click="nominate">Nominate Someone</large-button>
-      <large-button @click="spinWheel">Spin the wheel!</large-button>
-    </row>
+      <row>
+        <large-button @click="nominate">Nominate Someone</large-button>
+        <large-button @click="spinWheel">Spin the wheel!</large-button>
+      </row>
+    </div>
 
     <nominated-overlay v-if="nominee !== ''" @click.native="endNomination" :nominee="nominee" />
 
     <wheel :availablePeople="availablePeople" :duration="wheelSpinDuration" :rigged="rigged" @onRotateEnd="setNominee" v-if="showWheel" />
 
     <audio-source :source="wheelAudio" ref="audio" :duration="wheelSpinDuration" :volume="volume" />
-  </main>
+  </div>
 </template>
 
 <script>
@@ -146,3 +148,18 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+
+  .app {
+    height: 100%;
+  }
+
+  .column {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+</style>
